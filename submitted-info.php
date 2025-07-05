@@ -1,3 +1,9 @@
+<?php
+// DEBUG MODE ON
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -51,38 +57,63 @@ if ($conn->connect_error) {
     die("❌ Database connection failed: " . $conn->connect_error);
 }
 
+require_once 'phpqrcode/qrlib.php'; // Make sure this file exists
+
 $sql = "SELECT * FROM users ORDER BY id DESC";
 $result = $conn->query($sql);
 
-if ($result->num_rows > 0) {
+if ($result && $result->num_rows > 0) {
     echo "<table id='infoTable'><thead><tr>
         <th>ID</th>
+        <th>QR Link</th>
+        <th>QR Image</th>
+        <th>QR Template</th>
         <th>Full Name</th>
         <th>Blood Group</th>
         <th>Phone 1</th>
         <th>Phone 2</th>
         <th>Age</th>
         <th>Allergies</th>
-        <th>Medical Conditions</th>
+        <th>Medical</th>
         <th>Organ Donor</th>
         <th>WhatsApp</th>
         <th>Email</th>
         <th>Instagram</th>
         <th>LinkedIn</th>
         <th>Address</th>
-        <th>Donation Willing</th>
-        <th>ICE Instructions</th>
-        <th>Emergency Note</th>
+        <th>Donation</th>
+        <th>ICE</th>
+        <th>Note</th>
         <th>Gender</th>
         <th>Message</th>
-        <th>Profile Photo</th>
+        <th>Photo</th>
         <th>Submitted At</th>
     </tr></thead><tbody>";
 
     while ($row = $result->fetch_assoc()) {
+        $id = $row['id'];
+        $link = "http://localhost/ttf/qride.php?id=$id";
+        $qrFile = "qr/user_$id.png";
+
+        if (!file_exists($qrFile)) {
+            if (!is_dir("qr")) {
+                mkdir("qr", 0777, true);
+            }
+            QRcode::png($link, $qrFile, QR_ECLEVEL_L, 4);
+        }
+
         echo "<tr>";
-        echo "<td>".$row['id']."</td>";
+        echo "<td>$id</td>";
+        echo "<td><a href='qride.php?id=$id' target='_blank'>Open</a></td>";
+        echo "<td><img src='$qrFile' alt='QR'></td>";
+     // QR Template button
+echo "<td><a href='merge_qr_to_template.php?id=".$row['id']."' target='_blank'>
+        <button style='padding:5px 10px;background:#28a745;color:#fff;border:none;border-radius:4px;cursor:pointer;'>Generate Card</button>
+      </a></td>";
+
+
         echo "<td>".$row['full_name']."</td>";
+        
         echo "<td>".$row['Blood_Group']."</td>";
         echo "<td>".$row['phone1']."</td>";
         echo "<td>".$row['phone2']."</td>";
@@ -107,13 +138,11 @@ if ($result->num_rows > 0) {
 
     echo "</tbody></table>";
 } else {
-    echo "<p>No records found.</p>";
+    echo "<p>No records found or SQL error.</p>";
 }
-
 $conn->close();
 ?>
 
-<!-- DataTables -->
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script>
@@ -128,3 +157,4 @@ $conn->close();
 
 </body>
 </html>
+<?php

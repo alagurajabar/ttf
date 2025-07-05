@@ -1,3 +1,30 @@
+<?php
+// Database connection
+include('db_connect.php');
+
+// Get user ID from URL (e.g., qride.php?id=5)
+$id = $_GET['id'] ?? 1;
+
+// Fetch user data
+$sql = "SELECT * FROM emergency_info WHERE id = $id";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+
+// Assign variables
+$name = $row['name'];
+$blood_group = $row['blood_group'];
+$last_donation = $row['last_donation'];
+$age = $row['age'];
+$allergy = $row['allergy'];
+$medical = $row['medical_condition'];
+$organ = $row['organ_donation'];
+$vehicle = $row['vehicle_number'];
+$insurance = $row['insurance'];
+$contact1 = $row['contact1'];
+$contact2 = $row['contact2'];
+$instagram = $row['instagram'];
+$linkedin = $row['linkedin'];
+?>
 
 <!doctype html>
 <html class="no-js" lang="en">
