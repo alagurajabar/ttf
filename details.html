@@ -1,0 +1,80 @@
+<?php include('db.php'); ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Submitted Information</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-dark text-white">
+  <div class="container mt-5">
+    <h2 class="mb-4 text-success">Submitted Emergency Information</h2>
+    <div class="table-responsive">
+      <table class="table table-bordered table-dark table-hover">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Blood Group</th>
+            <th>Phone 1</th>
+            <th>Phone 2</th>
+            <th>Age</th>
+            <th>Allergies</th>
+            <th>Medical</th>
+            <th>Organ Donor</th>
+            <th>WhatsApp</th>
+            <th>Email</th>
+            <th>Instagram</th>
+            <th>LinkedIn</th>
+            <th>Photo</th>
+            <th>Address</th>
+            <th>Donation</th>
+            <th>ICE</th>
+            <th>Note</th>
+            <th>Gender</th>
+            <th>Message</th>
+            <th>Submitted</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+            $sql = "SELECT * FROM bike_emergency_info ORDER BY submitted_at DESC";
+            $result = $conn->query($sql);
+
+            if ($result && $result->num_rows > 0) {
+              while ($row = $result->fetch_assoc()) {
+                echo "<tr>";
+                echo "<td>" . htmlspecialchars($row['id']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['full_name']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['blood_group']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['phone1']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['phone2']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['age']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['allergies']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['medical_conditions']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['organ_donor_status']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['whatsapp_number']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['email']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['instagram']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['linkedin']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['profile_picture']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['address']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['donation_willingness']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['ice_instructions']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['emergency_note']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['gender']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['message']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['submitted_at']) . "</td>";
+                echo "</tr>";
+              }
+            } else {
+              echo "<tr><td colspan='21'>No records found.</td></tr>";
+            }
+            $conn->close();
+          ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
